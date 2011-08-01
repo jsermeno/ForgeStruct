@@ -1,0 +1,27 @@
+!!!
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='chrome=1')
+    
+    title ForgeStruct
+    style(text='text/css')
+      body {
+          color: #FFFFFF;
+          background-color: #EEEEFF;
+          margin: 0px;
+          padding: 0px;
+          overflow: hidden;
+          font-family: Helvetica, Arial, sans-serif;
+          font-size: 14px;
+      }
+      
+      #gl_canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        
+        -webkit-transform: scale3d(2.0, 2.0, 1.0);
+        -webkit-transform-origin: 0 0 0;
+      }
+  body!= body
