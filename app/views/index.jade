@@ -1,11 +1,18 @@
-
-script(type='text/javascript')
-  var map_data = !{chunk};
+// script(type='text/javascript', src='/socket.io/socket.io.js')
 
 script(type='text/javascript', src='/js/lib/Stats.js')
 script(type='text/javascript', src='/js/lib/RequestAnimationFrame.js')
 script(type='text/javascript', src='/js/lib/signals.min.js')
 script(type='text/javascript', src='/js/lib/ThreeWebGL.js')
 script(type='text/javascript', src='/js/lib/ThreeExtras.js')
-script(type='text/javascript', src='/js/main.js')
 
+script(type='text/javascript', src='/js/forge.js')
+script(type='text/javascript', src='/js/block.js')
+script(type='text/javascript', src='/js/chunk.js')
+script(type='text/javascript', src='/js/world.js')
+script(type='text/javascript', src='/js/start.js')
+
+#loading_screen
+  h1 ForgeStruct
+  h2 loading...
+  img(src='/assets/images/ajax-loader.gif')
