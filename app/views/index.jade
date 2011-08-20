@@ -6,11 +6,27 @@ script(type='text/javascript', src='/js/lib/signals.min.js')
 script(type='text/javascript', src='/js/lib/ThreeWebGL.js')
 script(type='text/javascript', src='/js/lib/ThreeExtras.js')
 
+// Load namespace
 script(type='text/javascript', src='/js/forge.js')
+
+// Load internal libraries
+script(type='text/javascript', src='/js/utils/math.js')
+script(type='text/javascript', src='/js/modules/two.js')
+script(type='text/javascript', src='/js/modules/orderedmap.js')
+
+// Load app dependencies
 script(type='text/javascript', src='/js/block.js')
-script(type='text/javascript', src='/js/chunk.js')
-script(type='text/javascript', src='/js/world.js')
-script(type='text/javascript', src='/js/start.js')
+
+script(type='text/javascript', src='/js/models/player.js')
+script(type='text/javascript', src='/js/models/chunk.js')
+script(type='text/javascript', src='/js/models/world.js')
+
+script(type='text/javascript', src='/js/modules/cache.js')
+script(type='text/javascript', src='/js/modules/chunkModule.js')
+script(type='text/javascript', src='/js/modules/cache.js')
+
+// Load app
+script(type='text/javascript', src='/js/loader.js')
 
 #loading_screen
   h1 ForgeStruct

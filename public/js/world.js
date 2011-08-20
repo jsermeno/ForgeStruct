@@ -36,7 +36,7 @@ Forge.World.prototype.initPayload = function( data ) {
 	while (bufPos < data.byteLength - 1) {
 		
 		// Find region pos
-		arr = new Uint8Array(data, bufPos);
+		arr = new Uint8Array(data, bufPos, 12);
 		x = arr[0] << 24; x += arr[1] << 16; x += arr[2] << 8; x += arr[3];
 		y = arr[4] << 24; y += arr[5] << 16; y += arr[6] << 8; y += arr[7];
 		z = arr[8] << 24; z += arr[9] << 16; z += arr[10] << 8; z += arr[11];
@@ -97,11 +97,87 @@ Forge.World.prototype.initChunks = function(start) {
 };
 
 
-Forge.World.prototype.getVisible = function() {
+/*
+	function getVisible
+	Retrieves visible chunks
+*/
+Forge.World.prototype.getVisible = function(pos) {
+	var data, xhr, params;
 	
+	data = {};
+	data.pos = pos;
+	data.visible = this.visible_array;
 	
+	xhr = new XMLHttpRequest();
+	
+	xhr.open('GET', '/load', true);
+	xhr.responseType = 'arraybuffer';
+
+	params = "data=" + JSON.stringify(data);
+
+	xhr.onload = function(e) {
+		//world.initPayload(this.response);
+		//world.initChunks(start);
+	}
+	
+	xhr.send(params);
 };
 
+
+/*
+	function updateVisible
+	Takes retrieved data and updates visible array and render state
+	@param data - binary response received from xmlHttpRequest()
+*/
+Forge.World.prototype.updateVisible = function(data) {
+	var 
+		x, y, z,
+		bufPos = 0,
+		arr,
+		hash,
+		chunk;
+		
+	var 
+		new_visible = [],
+		new_hash = {};
+		
+	
+	console.log("Received Load...");
+	console.time("load");
+	
+	// Loop through and parse each chunk
+	while (bufPos < data.byteLength - 1) {
+		
+		// Find region pos
+		arr = new Uint8Array(data, bufPos, 12);
+		x = arr[0] << 24; x += arr[1] << 16; x += arr[2] << 8; x += arr[3];
+		y = arr[4] << 24; y += arr[5] << 16; y += arr[6] << 8; y += arr[7];
+		z = arr[8] << 24; z += arr[9] << 16; z += arr[10] << 8; z += arr[11];
+		bufPos += 12;
+		
+		// Check if we're just receiving a hash
+		if ( x === 0xFFFFFFFF && y === 0xFFFFFFFF ) {
+			new_visible.push[z];
+			new_hash[z] = visible_hash[z];
+			continue;
+		}
+		
+		// Create hash
+		hash = this.hash3(x, y, z);
+		
+		// Cache hash
+		//this.cache_array.push(hash);
+		//this.cache_hash[hash] = new Uint8Array(data, bufPos, 32768);
+		//bufPos += 32768;
+		
+		// Create chunk
+		chunk = new Forge.Chunk(this, x, y, z);
+		new_visible.push(hash);
+		new_hash[hash] = chunk;
+	}
+	
+	this.visible
+}
 
 Forge.World.prototype.isSideVisible = function(x, y, z) {
 	var block = this.getBlock(x, y, z)
@@ -130,12 +206,13 @@ Forge.World.prototype.getBlock = function(x, y, z) {
 	if (chunkData === undefined) return 1;
 	
 	return chunkData[index];
-}
+};
 
 
 Forge.World.prototype.storeVisible = function(hash, data) {
 	
 };
+
 
 Forge.World.prototype.storeChunk = function(hash, data) {
 	
@@ -143,5 +220,5 @@ Forge.World.prototype.storeChunk = function(hash, data) {
 
 
 Forge.World.prototype.hash3 = function( x, y, z ) {
-	return (x & 0xFF) + (( y & 0xFF) << 8 ) + ((z & 0xFF) << 16);
+	return (x & 0xFF) + (( y & 0xFF) << 8 ) + ((z & 0xFF) << 16) + (0xFF000000);
 };

@@ -48,6 +48,7 @@ function bootControllers() {
 	
   app.get('/', gameController.launch);
   app.get('/payload', chunkController.spawnAjax);
+	app.get('/load/:data', chunkController.loadChunks);
 }
 
 

@@ -169,5 +169,21 @@ Chunk.prototype.getData = function() {
 };
 
 
+Chunk.prototype.getHashData = function() {
+	var hashBuffer = new Buffer(12);
+	
+	hashBuffer.write( BinaryUtils.itoaSeq(0x0FFFFFFF), 0, 'binary' );
+	hashBuffer.write( BinaryUtils.itoaSeq(0x0FFFFFFF), 4, 'binary' );
+	hashBuffer.write( BinaryUtils.itoaSeq( this.getHash() ), 8, 'binary' );
+	
+	return hashBuffer.toString('binary');
+}
+
+
+Chunk.prototype.getHash = function() {
+		return (this.rX & 0xFF) + ((this.rY & 0xFF) << 8 ) + ((this.rZ & 0xFF) << 16) + (0xFF000000);
+}
+
+
 
 module.exports = Chunk;

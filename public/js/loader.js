@@ -1,27 +1,16 @@
-(function(){
+Forge.Loader = (function(exports){
 	
 	var stats, scene, camera, renderer;
 	
 	function init() {
 		bootRenderer();
 		bootWorld();
-		initAxis();
+		drawAxes();
 	}
 	
 	
 	function bootWorld() {
-		/*var world = new Forge.World();
-		var xhr = new XMLHttpRequest();
-		
-		xhr.open('GET', '/payload', true);
-		xhr.responseType = 'arraybuffer';
-
-		xhr.onload = function(e) {
-			world.initPayload(this.response);
-			world.initChunks(start);
-		}
-
-		xhr.send();*/
+		Forge.World.update();
 	}
 	
 	
@@ -58,7 +47,8 @@
 	function animate() {
 		requestAnimationFrame( animate );
 	
-		stats.update();	
+		stats.update();
+		Forge.Player.update();	
 		render();
 	}
 	
@@ -68,7 +58,11 @@
 	}
 	
 	
-	function start() {
+	/*
+		Start game after initial loading.
+		Removes loading screen etc.
+	*/
+	exports.start = function() {
 		document.getElementById('loading_screen').style.display = 'none';
 		camera.position.set(200, 2000, 200);
 		
@@ -76,9 +70,11 @@
 	}
 	
 	
-	function initAxis() {
-	
-    var geometry, line;
+	/*
+		Utility function to draw x, y, z axes for debug reference
+	*/
+	function drawAxes() {
+		var geometry, line;
     
     // x axis - RED
     geometry = new THREE.Geometry();
@@ -106,8 +102,10 @@
     
     line = new THREE.Line(geometry, new THREE.LineBasicMaterial( { color: 0x0000FF } ));
     scene.addObject( line );
-	
 	}
 	
 	init();
-})();
+	
+	return exports;
+	
+})({});
