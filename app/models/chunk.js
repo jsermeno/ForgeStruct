@@ -11,8 +11,8 @@ var Chunk = function(x, y, z) {
   this.frequency = 0.025;
   this.amp = 0.15;
   this.chunk_size = 32;
-  this.terrain_max_height = 64;
-	this.sample_rate = 16;
+  this.terrain_max_height = 128;
+	this.sample_rate = 32;
   
   this.writeStart = 12; // buf pos to start writing block data
   

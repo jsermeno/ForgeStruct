@@ -1,7 +1,14 @@
+/*
+	Initial load of game
+	@author Justin Sermeno
+*/
 Forge.Loader = (function(exports){
 	
-	var stats, scene, camera, renderer;
+	var stats, scene, camera, renderer, worker;
 	
+	/*
+		First non-closure function called in execution
+	*/
 	function init() {
 		bootRenderer();
 		bootWorld();
@@ -9,16 +16,24 @@ Forge.Loader = (function(exports){
 	}
 	
 	
+	/*
+		Runs functions necessary to updating and processing of the game world
+	*/
 	function bootWorld() {
+		//worker = new Worker();
+		
 		Forge.World.update();
 	}
 	
 	
+	/*
+		Initializes components necessary for rendering
+	*/
 	function bootRenderer() {
 		//camera = new THREE.Camera(30, window.innerWidth / window.innerHeight, 1, 1000);
 		camera = new THREE.FirstPersonCamera( {
 
-			fov: 60, aspect: window.innerWidth / window.innerHeight, near: 1, far: 20000,
+			fov: 30, aspect: window.innerWidth / window.innerHeight, near: 1, far: 20000,
 			movementSpeed: 1000, lookSpeed: 0.125, noFly: false, lookVertical: true, constrainVertical: true
 
 		} );
@@ -38,35 +53,11 @@ Forge.Loader = (function(exports){
 		// Share
 		Forge.Shared.scene = scene;
 		Forge.Shared.camera = camera;
+		Forge.Shared.stats = stats;
+		Forge.Shared.renderer = renderer;
 		
 		document.body.appendChild(stats.domElement);
 		document.body.appendChild(renderer.domElement);
-	}
-	
-	
-	function animate() {
-		requestAnimationFrame( animate );
-	
-		stats.update();
-		Forge.Player.update();	
-		render();
-	}
-	
-	
-	function render() {
-		renderer.render( scene, camera );
-	}
-	
-	
-	/*
-		Start game after initial loading.
-		Removes loading screen etc.
-	*/
-	exports.start = function() {
-		document.getElementById('loading_screen').style.display = 'none';
-		camera.position.set(200, 2000, 200);
-		
-		animate();
 	}
 	
 	

@@ -1,3 +1,7 @@
+/*
+	Utility class for world math
+	@author Justin Sermeno
+*/
 Forge.Math = (function(exports){
 	
 	var chunk_size = Forge.Config.chunk_size;

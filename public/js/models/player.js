@@ -1,5 +1,6 @@
 /*
 	Represents current client's player
+	@author Justin Sermeno
 */
 Forge.Player = (function(exports){
 	
@@ -7,7 +8,10 @@ Forge.Player = (function(exports){
 	
 	
 	exports.getPosition = function() {
-		return position;
+		var twoDPos = position.clone();
+		twoDPos.y = 0;
+		
+		return twoDPos;
 	}
 	
 	

@@ -47,7 +47,6 @@ function bootControllers() {
 	var chunkController = require('./app/controllers/chunk_controller.js')(app);
 	
   app.get('/', gameController.launch);
-  app.get('/payload', chunkController.spawnAjax);
 	app.get('/load/:data', chunkController.loadChunks);
 }
 

@@ -5,7 +5,7 @@
 */
 
 Forge.ChunkModule = (function(exports){
-	
+	var oneTime = false;
 	/*
 		Builds a vector of world coordinates
 		@pos - THREE.Vector3
@@ -93,8 +93,12 @@ Forge.ChunkModule = (function(exports){
 	  	scene.addObject( mesh );
 
 	    // character collisions
-	    THREE.Collisions.colliders.push( THREE.CollisionUtils.MeshColliderWBox(mesh) );
-
+	    //THREE.Collisions.colliders.push( THREE.CollisionUtils.MeshColliderWBox(mesh) );
+			if (!oneTime) {
+				console.log("Logging geometry...");
+				console.log(geometry);
+				oneTime = true;
+			}
 			return mesh;
 	  }
 

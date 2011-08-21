@@ -1,5 +1,6 @@
 /*
 	Represents the world space and landscape
+	@author Justin Sermeno
 */
 Forge.World = (function(exports){
 	
@@ -28,14 +29,15 @@ Forge.World = (function(exports){
 		var renderObject;
 		
 		// Remove rendered objects from scene if they are no longer visible
-		console.log("updating rendered...");
+		//console.log("updating rendered...");
+		console.log("new visible: " + data.size());
+		console.log("to remove: " + toRemove.size());
 		console.time("rendering");
 		for ( i = 0, len = toRemove.size(); i < len; i++ ) {
 			renderObject = toRemove.getIndex(i).getRenderObject();
 			
 			if ( renderObject !== undefined ) {
 				scene.removeChild( renderObject );
-				//visible.remove( toRemove.getKeyAtIndex(i) );
 			}
 		}
 		
@@ -54,11 +56,11 @@ Forge.World = (function(exports){
 		setTimeout(renderWorld, 10);
 		
 		// inner function to run asynchronously
-		function renderWorld() {
+		function renderWorld(renderData) {
 			
 			if (i >= len) {
 				if ( !started ) {
-					Forge.Loader.start();
+					Forge.Game.start();
 					started = true;
 				}
 				console.timeEnd("rendering");
@@ -66,13 +68,13 @@ Forge.World = (function(exports){
 			}
 			
 			chunk = data.getIndex(i++);
-			
+			if ( chunk === undefined ) { console.log("couldn't find chunk at index " + (i - 1)); console.log(data); }
 			if ( chunk.isDirty ) {
 				chunk.setRenderObject( Forge.ChunkModule.render( chunk ) );
 				chunk.clean();
 			}
 			
-			setTimeout(arguments.callee, 10);
+			setTimeout(arguments.callee(renderData), 10);
 		}
 		
 	}

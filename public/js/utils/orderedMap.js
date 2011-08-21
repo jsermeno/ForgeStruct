@@ -1,5 +1,6 @@
 /*
 	Ordered Map implementation
+	@author Justin Sermeno
 */
 Forge.OrderedMap = (function(){
 	
@@ -28,7 +29,7 @@ Forge.OrderedMap = (function(){
 	OrderedMap.prototype.getIndex = function(index) {
 		var hash = this.order_array[index];
 		if (this.order_map[ hash ] === undefined) {
-			console.log("cannot find ordered map index: " + index + " for hash: " + hash);
+			console.log("cannot find ordered map index: " + index + " for hash: " + hash + " when array length = " + this.order_array.length);
 		}
 		
 		return this.order_map[ this.order_array[index] ];

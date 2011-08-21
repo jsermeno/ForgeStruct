@@ -1,3 +1,7 @@
+/*
+	Game namespace
+	@author Justin Sermeno
+*/
 var Forge = Forge || {
 	Shared: {},
 	Config: {

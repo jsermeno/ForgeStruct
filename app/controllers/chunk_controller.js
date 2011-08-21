@@ -1,6 +1,4 @@
 var Chunk = require('../models/chunk.js');
-
-var BlockUtils = require('../lib/blockUtils.js');
 var Compress = require('../lib/compress');
 
 module.exports = function() {
