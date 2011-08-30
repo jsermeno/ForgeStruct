@@ -27,22 +27,15 @@ Forge.Cache = (function(exports){
 		var new_visible = new Forge.OrderedMap();
 		
 		var hit_server = false;
-		console.log("cache size: " + cache.size());
+		//console.log("cache size: " + cache.size());
 		var cache_found_count = 0;
-		console.log(visible.getHashOfKeys());
-		console.log("printing visibility check range: x: " + (pos.x - radiusX) + " - " + (pos.x + radiusX) + ", y: " + (pos.y - radiusY) + " - " + (pos.y + radiusY) + ", z: " + (pos.z - radiusZ) + " - " + (pos.z + radiusZ));
+		//console.log(visible.getHashOfKeys());
+		//console.log("printing visibility check range: x: " + (pos.x - radiusX) + " - " + (pos.x + radiusX) + ", y: " + (pos.y - radiusY) + " - " + (pos.y + radiusY) + ", z: " + (pos.z - radiusZ) + " - " + (pos.z + radiusZ));
 		// loop over visible area
 		for ( u = pos.x - radiusX; u <= pos.x + radiusX; u++) {
 			for ( v = pos.y - radiusY; v <= pos.y + radiusY; v++) {
 				for ( w = pos.z - radiusZ; w <= pos.z + radiusZ; w++) {
 					hash = Forge._2.hash3(u, v, w);
-					
-					// debug
-					if (u === 0 && v === -1 && w === 0) {
-						console.log("debug");
-						console.log("hash: " + hash);
-						console.log("find visible: " + visible.get(hash));
-					}
 					
 					// if chunk is already stored in visible hash then skip
 					if ( visible.get(hash) !== undefined ) {
@@ -64,8 +57,8 @@ Forge.Cache = (function(exports){
 				}
 			}
 		}
-		console.log("retrieved " + cache_found_count + " from the cache");
-		console.log(visible.getHashOfKeys());
+		//console.log("retrieved " + cache_found_count + " from the cache");
+		//console.log(visible.getHashOfKeys());
 		if ( hit_server ) updateFromServer(new_visible, visible, pos, cb);
 		else cb( new_visible, visible );
 		

@@ -6,6 +6,8 @@
 
 Forge.ChunkModule = (function(exports){
 	var oneTime = false;
+	//var materials = Forge.Block.loadGrassMaterials();
+	
 	/*
 		Builds a vector of world coordinates
 		@pos - THREE.Vector3
@@ -96,7 +98,7 @@ Forge.ChunkModule = (function(exports){
 	    //THREE.Collisions.colliders.push( THREE.CollisionUtils.MeshColliderWBox(mesh) );
 			if (!oneTime) {
 				console.log("Logging geometry...");
-				console.log(geometry);
+		    console.log(geometry.faces);
 				oneTime = true;
 			}
 			return mesh;

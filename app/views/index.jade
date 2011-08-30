@@ -1,33 +1,33 @@
-// script(type='text/javascript', src='/socket.io/socket.io.js')
-
 script(type='text/javascript', src='/js/lib/Stats.js')
 script(type='text/javascript', src='/js/lib/RequestAnimationFrame.js')
 script(type='text/javascript', src='/js/lib/signals.min.js')
 script(type='text/javascript', src='/js/lib/ThreeWebGL.js')
 script(type='text/javascript', src='/js/lib/ThreeExtras.js')
+script(type='text/javascript', src='/js/lib/WebGLRenderer.js')
+script(type='text/javascript', src='/js/lib/underscore-min.js')
 
-// Load namespace
-script(type='text/javascript', src='/js/forge.js')
 
-// Load internal libraries
-script(type='text/javascript', src='/js/utils/math.js')
-script(type='text/javascript', src='/js/utils/two.js')
-script(type='text/javascript', src='/js/utils/orderedmap.js')
+// namespace
+script(type='text/javascript', src='/src/forge.js')
 
-// Load app dependencies
-script(type='text/javascript', src='/js/models/block.js')
-script(type='text/javascript', src='/js/models/player.js')
-script(type='text/javascript', src='/js/models/chunk.js')
-script(type='text/javascript', src='/js/models/world.js')
+// utils
+script(type='text/javascript', src='/src/utils/math.js')
+script(type='text/javascript', src='/src/utils/two.js')
+script(type='text/javascript', src='/src/utils/orderedMap.js')
 
-script(type='text/javascript', src='/js/modules/cache.js')
-script(type='text/javascript', src='/js/modules/chunkModule.js')
-script(type='text/javascript', src='/js/modules/cache.js')
+// models
+script(type='text/javascript', src='/src/models/chunk.js')
+script(type='text/javascript', src='/src/models/player.js')
 
-script(type='text/javascript', src='/js/controllers/game.js')
+// world
+script(type='text/javascript', src='/src/world/blockManager.js')
+script(type='text/javascript', src='/src/world/chunkCache.js')
+script(type='text/javascript', src='/src/world/chunkManager.js')
+script(type='text/javascript', src='/src/world/world.js')
 
-// Load app
-script(type='text/javascript', src='/js/loader.js')
+// game
+script(type='text/javascript', src='/src/game/game.js')
+script(type='text/javascript', src='/src/game/loader.js')
 
 #loading_screen
   h1 ForgeStruct

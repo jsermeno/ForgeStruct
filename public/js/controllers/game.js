@@ -28,7 +28,7 @@ Forge.Game = (function(exports){
 		camera = Forge.Shared.camera;
 		stats = Forge.Shared.stats;
 		renderer = Forge.Shared.renderer;
-		
+				
 		document.getElementById('loading_screen').style.display = 'none';
 		camera.position.set(200, 2000, 200);
 		
@@ -44,7 +44,7 @@ Forge.Game = (function(exports){
 
 		loops = 0;
 		while( (new Date()).getTime() > next_game_tick && loops < max_frameskip) {
-			updateGame();
+			updateGame(next_game_tick);
 			
 			next_game_tick += skip_ticks;
 			loops++;
@@ -56,7 +56,7 @@ Forge.Game = (function(exports){
 		
 		erp = ( (new Date()).getTime() + skip_ticks - next_game_tick ) / skip_ticks;
 	
-		stats.update(); // update stats at the same speed as the render
+		//stats.update(); // update stats at the same speed as the render
 		render();
 	}
 	
@@ -64,8 +64,18 @@ Forge.Game = (function(exports){
 	/*
 		update game state
 	*/
-	function updateGame() {
-		Forge.Player.update();
+	function updateGame(time) {
+    var worker = Forge.Shared.worker;
+		//Forge.Player.update();
+		
+		/*worker.onmessage = function(event) {
+		  //var vertices = JSON.parse(event.data);
+			console.timeEnd("load worker vertices" + time);
+			stats.update()
+			//console.log("received worker data");
+		}
+		console.time("load worker vertices" + time);*/
+		//worker.postMessage({ n: "pos", pos: Forge.Player.getPosition() });
 	}
 	
 	

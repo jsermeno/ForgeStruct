@@ -5,15 +5,15 @@
 
 var express = require('express');
 var app = module.exports = express.createServer();
-var io = require('socket.io').listen(app);
+//var io = require('socket.io').listen(app);
 
 // boot
 exports.boot = function( params ) {
   
-  io.configure(function(){
+  /*io.configure(function(){
     io.set('transports', ['xhr-polling']);  
     io.set('log level', 2);
-  });
+  });*/
 
   app.configure(function(){
     app.set('views', __dirname + '/app/views');
