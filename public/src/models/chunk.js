@@ -17,8 +17,12 @@ Forge.Chunk = (function(){
 		this.position = spec.position || new THREE.Vector3( 0, 0, 0);
 		this.chunk_data = spec.data || null;
     
-    this.mesh = spec.mesh;
     this.hash = Forge._2.hash3(this.position.x, this.position.y, this.position.z);
+    
+    if ( spec.mesh !== undefined ) {
+      this.mesh = spec.mesh;
+      this.mesh.hash = this.hash;
+    }
 	}
 	
   /*

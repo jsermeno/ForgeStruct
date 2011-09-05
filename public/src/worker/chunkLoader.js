@@ -1,4 +1,5 @@
-importScripts('/js/lib/ThreeWorker.js');
+//importScripts('/js/lib/ThreeWorker.js');
+importScripts('/js/lib/ThreeWebWorker.js');
 
 importScripts('/src/forge.js');
 importScripts('/src/utils/math.js');
@@ -10,7 +11,7 @@ importScripts('/src/world/chunkCache.js');
 
 (function(){
   
-  var update_list; // chunks to update
+  var update_list = []; // chunks to update
   var processed_queue = [];
 
   var cache = new Forge.ChunkCache();
@@ -26,7 +27,7 @@ importScripts('/src/world/chunkCache.js');
   */
   function loadChunks(hash, pos) {
     var params;    
-    var new_update_list = [];
+    //var new_update_list = [];
 
     // add request for neighbors of
     // each hash. I'm iterating over the hash
@@ -35,11 +36,12 @@ importScripts('/src/world/chunkCache.js');
     // of using a utility function from underscore.js
     // which will create a new iteration
     for( key in hash ) {
-      new_update_list.push(key);
+      //new_update_list.push(key);
+      update_list.push(key);
       Forge._2.buildNeighbors( key, hash );
     }
     
-    update_list = new_update_list;
+    //update_list = new_update_list;
 
     // send hashes that need updating to the server
     params = encodeURIComponent( JSON.stringify({h:hash,p:pos}) );
@@ -84,24 +86,39 @@ importScripts('/src/world/chunkCache.js');
 
   /*
     Iterate over update list and start adding
-    geometries to the queue
+    geometries to the queue.
+    Need to do this asynchronously or else we
+    need to process all chunks before sending any
+    out. Interestingly enough it's almost as if the
+    web worker will never achieve this task, like
+    if it freezes.
   */
   function buildGeometries() {
     var
-        chunk, key, i, len;
+        chunk, key;// i, len;
     
-    i = 0; len = update_list.length;
+    //i = 0; len = update_list.length;
     
     setTimeout(iterateGeometries, 50); // iterate asynchronously
     
     function iterateGeometries() {
-      if ( i >= len )
+      //if ( i >= len )
+      if ( update_list.length === 0 )  
         return;
-        
-      chunk = cache.get( update_list[i] );
-      buildGeometry( chunk );
+      
+      chunk = cache.get( update_list.shift() );
+      
+      // as geometry building starts to stack up,
+      // it's possible that the update_list will already
+      // be updated to the next view.
+      // In that case we skip building this chunk
+      if ( chunk !== undefined ) {
+        buildGeometry( chunk );
+      } else {
+        throw JSON.stringify(update_list);
+      }
     
-      i++;
+      //i++;
       setTimeout(arguments.callee, 50);
     }
     
@@ -160,7 +177,7 @@ importScripts('/src/world/chunkCache.js');
                               (v * block_size) + pos.y * chunk_size * block_size, 
                               (w * block_size) + pos.z * chunk_size * block_size);
 
-	          GeometryUtils.merge( geometry, mesh );
+	          THREE.GeometryUtils.merge( geometry, mesh );
 
 	          empty = false;
 	        }

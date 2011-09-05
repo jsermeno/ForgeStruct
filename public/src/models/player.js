@@ -27,7 +27,7 @@ Forge.Player = (function(exports){
 		var camera = Forge.Shared.camera;
 
     position.copy( camera.position );
-    console.log(position);
+    //console.log(position);
     
 	};
 

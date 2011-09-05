@@ -35,17 +35,17 @@ Forge.ChunkManager = (function(exports){
     
     if ( event.data.p === undefined )
       return;
-    console.time("unserializing geometry");
+    
     var geometry = Forge.Math.unserializeGeometry( event.data.d );
     var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
-    console.timeEnd("unserialize geometry");
+    
     var chunk = new Forge.Chunk({
       position: event.data.p,
       mesh: mesh
     });
     
     Forge.Shared.chunkCache.set( chunk.hash, chunk );
-    console.log("adding…");
+    console.log('adding…');
   }
 
   return exports;

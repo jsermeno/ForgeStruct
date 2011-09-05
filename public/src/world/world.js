@@ -15,6 +15,8 @@ Forge.World = (function(exports){
 
   var chunkCache;
   
+  var scene;
+  
 	/*
 		Updates world on tick
 	*/
@@ -41,6 +43,7 @@ Forge.World = (function(exports){
   
     var pos = Forge.Player.getRegion();
     var new_visible_hash = {};
+    var old_visible_array;
     var chunks_to_queue = {};
     var update = false;
 
@@ -52,6 +55,7 @@ Forge.World = (function(exports){
    
     lastRegion = pos;
     console.log("updating visible…");*/
+    old_visible_array = visible.children;
     visible.children = [];
 
     for ( u = pos.x - radiusX; u <= pos.x + radiusX; u++) {
@@ -69,7 +73,7 @@ Forge.World = (function(exports){
             update = true;
           } else if( chunk === undefined ) {
             // do nothing
-            // if we reach this statement, then
+            // if we reach this statement,
             // we are waiting for the chunk to load
           }
           else {
@@ -84,8 +88,19 @@ Forge.World = (function(exports){
       }
     }
     
+    // Remove old chunks
+    for ( u = 0, v = old_visible_array.length; u < v; u++ ) {
+      chunk = old_visible_array[u];
+      if ( new_visible_hash[ chunk.hash ] === undefined ) {
+        scene.removeObject( chunk );
+      }
+    }
+    
     // update chunks
     if ( update ) {
+      console.log("queue for update");
+      console.log(JSON.stringify(chunks_to_queue));
+      console.log(JSON.stringify(pos));
       Forge.ChunkManager.queueForUpdate( chunks_to_queue, pos );
     }
     
@@ -106,7 +121,7 @@ Forge.World = (function(exports){
     Load initial world state
   */
   exports.loadWorld = function() {
-    var scene = Forge.Shared.scene;
+    scene = Forge.Shared.scene;
     
     Forge.Shared.chunkCache = chunkCache = new Forge.ChunkCache();    
 

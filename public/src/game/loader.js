@@ -21,6 +21,25 @@ Forge.Loader = (function(exports){
 	*/
 	function bootWorld() {
     Forge.World.loadWorld();
+    /*var blockManager = new Forge.BlockManager({source: 'clientWindow'});
+    var finalGeometry = new THREE.Geometry();
+   
+    var geometry = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1, blockManager.getGrass(), false);
+    var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
+    
+    GeometryUtils.merge(finalGeometry, mesh);
+    
+    geometry = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1, blockManager.getGrass(), false);
+    mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
+    mesh.position.set(100, 0, 0);
+    
+    GeometryUtils.merge(finalGeometry, mesh)
+    console.log(finalGeometry);
+    
+    window.finalGeometry = finalGeometry;
+    
+    mesh = new THREE.Mesh(finalGeometry, new THREE.MeshFaceMaterial());
+    scene.addObject(mesh);*/
    
 		window.onload = function(){ Forge.Game.start() };
 	}
@@ -39,6 +58,8 @@ Forge.Loader = (function(exports){
 		} );
 				
 		scene = new THREE.Scene();
+		
+		//scene.fog = new THREE.Fog( 0xffffff, 0.05, 15000 );
 		
 		// Create renderer
 		renderer = new THREE.WebGLRenderer({ antialias: false });
