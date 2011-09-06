@@ -11,11 +11,14 @@ Forge.World = (function(exports){
 	var radiusY = Forge.Config.v_dist_y / 2;
 	var radiusZ = Forge.Config.v_dist_z / 2;
 
-  var lastRegion; // last known of region of the player
-
   var chunkCache;
   
   var scene;
+
+  var lastRegion; // last known of region of the player
+  
+  // debug
+  var totalChunksSent = 0;
   
 	/*
 		Updates world on tick
@@ -48,15 +51,13 @@ Forge.World = (function(exports){
     var update = false;
 
     // Only update visible if the regions have changed
-    /*if ( lastRegion !== undefined ) {
+    if ( lastRegion !== undefined ) {
       if ( pos.distanceTo( lastRegion ) === 0 )
         return;
     }
    
     lastRegion = pos;
-    console.log("updating visible…");*/
-    old_visible_array = visible.children;
-    visible.children = [];
+    
 
     for ( u = pos.x - radiusX; u <= pos.x + radiusX; u++) {
 			for ( v = pos.y - radiusY; v <= pos.y + radiusY; v++) {
@@ -70,6 +71,7 @@ Forge.World = (function(exports){
             // back into view. Need to
             // retrieve it
             chunks_to_queue[ hash ] = 1;
+            totalChunksSent++;
             update = true;
           } else if( chunk === undefined ) {
             // do nothing
@@ -87,25 +89,29 @@ Forge.World = (function(exports){
         }
       }
     }
-    
+   
     // Remove old chunks
-    for ( u = 0, v = old_visible_array.length; u < v; u++ ) {
-      chunk = old_visible_array[u];
-      if ( new_visible_hash[ chunk.hash ] === undefined ) {
-        scene.removeObject( chunk );
-      }
-    }
+    for ( u = 0, v = visible.children.length, w = 0; u < v; u++ ) {
+      chunk = visible.children[w];
     
-    // update chunks
-    if ( update ) {
-      console.log("queue for update");
-      console.log(JSON.stringify(chunks_to_queue));
-      console.log(JSON.stringify(pos));
-      Forge.ChunkManager.queueForUpdate( chunks_to_queue, pos );
+      if (new_visible_hash[ chunk.hash ] === undefined ) {
+        visible.removeChild( chunk );
+        scene.removeChild( chunk );
+      } else {
+        w++;
+      }
     }
     
     // Finish updating new visible hash
     visible_hash = new_visible_hash;
+        
+    // update chunks
+    if ( update ) {
+      console.log("queue for update: " + JSON.stringify(pos));
+      //console.log("total sent: " + totalChunksSent);
+      Forge.ChunkManager.queueForUpdate( chunks_to_queue, pos );
+    }
+    
   }
   
 
@@ -115,6 +121,14 @@ Forge.World = (function(exports){
   exports.isChunkVisible = function( hash ) {
     return visible_hash[ hash ] !== undefined;
   };
+  
+  
+  /*
+    Lets world know to refresh visible
+  */
+  exports.refreshVisible = function() {
+    lastRegion = undefined;
+  }
 
 
   /*

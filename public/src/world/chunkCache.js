@@ -11,7 +11,6 @@ Forge.ChunkCache = (function(){
 
   function Cache() {
     this.cache = new Forge.OrderedMap();
-
   }
 
 

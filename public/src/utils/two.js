@@ -5,21 +5,68 @@
 */
 Forge._2 = (function(exports){
 	
+	var startQueue = true;
+	var queueCount = 0;
+	
+	// quick references
+	var Queue = Forge.Queue;
+	
+	
+	/*
+    rapid succession ajax requests cancel older
+    ajax requests, leaving only the last ajax
+    request actually finishing. This ajax queue
+    implementation fixes this.
+    @o - ajax param object
+	*/
+	exports.ajaxBinaryQueue = function(o) {
+    o.count = queueCount;
+    queueCount++;
+	
+    Queue.queue('ajax', function(){
+      exports.ajaxBinary(o);
+    });
+    //console.log('adding to queue… ' + Queue.size('ajax'));
+    //console.log('queueStatus: ' + startQueue);
+    if (startQueue) {
+      //console.log('starting dequeue…' + ' : n - ' + o.count);
+      Queue.dequeue('ajax');
+    }
+	};
+	
+	
 	/*
 	 	xmlHttpRequest that expects to receive an array buffer
 		@param path
 		@param onload
 		@param params
 	*/
-	exports.ajaxBinary = function(path, onload, params) {
-		
+	exports.ajaxBinary = function(o) {
+    
+    //console.log('starting ajax request…' + Queue.size('ajax') + ': pos - ' + JSON.stringify(o.pos) + ': n - ' + o.count);
+    startQueue = false;
+    
 		var xhr = new XMLHttpRequest();
 		
-		xhr.open('GET', path + "/" + params, true);
+		xhr.open('GET', o.url + "/" + o.data, true);
 		xhr.responseType = 'arraybuffer';
 	
-		xhr.onload = onload;
-	
+		xhr.onreadystatechange = function() {
+		  if ( xhr.readyState === 4 ) {
+		    //console.log('finishing response... : n - ' + o.count);
+		    if ( xhr.status === 200 ) {
+		      o.success(xhr.response);
+		    } else {
+		      throw new Error('_2.ajaxBinary: xhr response failed');
+		    }
+		    
+		    startQueue = true;
+		    //console.log('continuing dequeue… ' + Queue.size('ajax') + ': n - ' + o.count);
+		    Queue.dequeue('ajax');
+		  }
+		};
+		
+    //console.log('sending… : n - ' + o.count);
 		xhr.send(null);
 	};
 	

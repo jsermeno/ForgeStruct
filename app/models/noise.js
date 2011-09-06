@@ -4,14 +4,14 @@ var PerlinNoise = function () {
     // multi-fractal parameters
     var
 			mf_gain = 4,
-			mf_lacunarity = 16,
-			mf_octaves = 2;
+			mf_lacunarity = 4,
+			mf_octaves = 3;
       
 		// ridged multi-fractal parameters
 		var
-			rmf_gain = 2,
-			rmf_lacunarity = 8,
-			rmf_octaves = 8,
+			rmf_gain = 0.5,
+			rmf_lacunarity = 4,
+			rmf_octaves = 2,
 			rmf_offset = 1;
 
     var p = [151, 160, 137, 91, 131, 15, 90, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203,

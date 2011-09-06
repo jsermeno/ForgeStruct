@@ -1,8 +1,10 @@
 //importScripts('/js/lib/ThreeWorker.js');
 importScripts('/js/lib/ThreeWebWorker.js');
+importScripts('/src/utils/consoleWorker.js');
 
 importScripts('/src/forge.js');
 importScripts('/src/utils/math.js');
+importScripts('/src/utils/queue.js');
 importScripts('/src/utils/two.js');
 importScripts('/src/utils/orderedMap.js');
 importScripts('/src/world/blockManager.js');
@@ -11,7 +13,7 @@ importScripts('/src/world/chunkCache.js');
 
 (function(){
   
-  var update_list = []; // chunks to update
+  var update_list = new Forge.OrderedMap(); // chunks to update
   var processed_queue = [];
 
   var cache = new Forge.ChunkCache();
@@ -20,6 +22,13 @@ importScripts('/src/world/chunkCache.js');
   var chunk_size = Forge.Config.chunk_size;
   var block_size = Forge.Config.block_size;
   
+  var building = false;
+  
+  // debug
+  var notYetReceived = 0;
+  var everything = new Forge.OrderedMap();
+  
+  
   /*
     Request chunks from the server
     @param hash - hash of chunks to update
@@ -27,7 +36,6 @@ importScripts('/src/world/chunkCache.js');
   */
   function loadChunks(hash, pos) {
     var params;    
-    //var new_update_list = [];
 
     // add request for neighbors of
     // each hash. I'm iterating over the hash
@@ -36,17 +44,19 @@ importScripts('/src/world/chunkCache.js');
     // of using a utility function from underscore.js
     // which will create a new iteration
     for( key in hash ) {
-      //new_update_list.push(key);
-      update_list.push(key);
+      update_list.set(key, 1);
       Forge._2.buildNeighbors( key, hash );
     }
-    
-    //update_list = new_update_list;
 
     // send hashes that need updating to the server
     params = encodeURIComponent( JSON.stringify({h:hash,p:pos}) );
 		
-    Forge._2.ajaxBinary("/load", processChunks, params);
+    Forge._2.ajaxBinaryQueue({
+      url: "/load", 
+      success: processChunks, 
+      data: params,
+      pos: pos 
+    });
   }
 
 
@@ -54,16 +64,19 @@ importScripts('/src/world/chunkCache.js');
     Callback for ajax call to server.
     Processes Chunks, then adds them to the cache
   */
-  function processChunks() {
+  function processChunks(response) {
     var bufPos = 0;
 
 		var coordinates, hash, chunk_data;
 		
+		notYetReceived = response.byteLength / 32780;
+		console.log("chunks received: " + notYetReceived);
+		
 		// Iterate ArrayBuffer for chunks
-		while ( bufPos < this.response.byteLength - 1) {
+		while ( bufPos < response.byteLength - 1) {
 
       // pull region coordinates
-			coordinates = Forge._2.getCoordinates(this.response, bufPos);
+			coordinates = Forge._2.getCoordinates(response, bufPos);
 			bufPos += 12;
 
 			hash = Forge._2.hash3(coordinates.x, coordinates.y, coordinates.z);
@@ -71,7 +84,7 @@ importScripts('/src/world/chunkCache.js');
       // pull single chunk data
 		  chunk_data = new Forge.Chunk({
         position: coordinates,
-        data: new Uint8Array(this.response, bufPos, 32768)
+        data: new Uint8Array(response, bufPos, 32768)
       });
       
       cache.set(hash, chunk_data);
@@ -95,30 +108,36 @@ importScripts('/src/world/chunkCache.js');
   */
   function buildGeometries() {
     var
-        chunk, key;// i, len;
+        chunk, key, hash;
     
-    //i = 0; len = update_list.length;
+    if (building) return; // don't start two timeout loops
     
     setTimeout(iterateGeometries, 50); // iterate asynchronously
+    building = true;
     
     function iterateGeometries() {
-      //if ( i >= len )
-      if ( update_list.length === 0 )  
-        return;
       
-      chunk = cache.get( update_list.shift() );
+      if ( update_list.size() === 0 ) {
+        console.log('worker: size === 0');
+        building = false;
+        return;
+      }
+      
+      hash = update_list.shiftKey();
+      
+      chunk = cache.get( hash );
       
       // as geometry building starts to stack up,
-      // it's possible that the update_list will already
-      // be updated to the next view.
-      // In that case we skip building this chunk
+      // it's possible we find a chunk that hasn't
+      // received a response from the server yet.
+      // In that case remove and at to end of list.
       if ( chunk !== undefined ) {
         buildGeometry( chunk );
       } else {
-        throw JSON.stringify(update_list);
+        notYetReceived++;
+        update_list.set(hash, 1);
       }
     
-      //i++;
       setTimeout(arguments.callee, 50);
     }
     
@@ -242,7 +261,25 @@ importScripts('/src/world/chunkCache.js');
       return;
     }
   }
-
+  
+  /*
+    Receives request to output information
+    to console.
+  */
+  function debug(d) {
+    switch(d) {
+      case 'visibleCount':
+        console.log(update_list.size());
+        console.log(update_list.getArrayOfKeys());
+        break;
+      case 'notReceived':
+        console.log(notYetReceived);
+        break;
+      case 'queueCount':
+        console.log(Forge.Queue.size('ajax'));
+        break;
+    }
+  }
 
   /*
     Handles routing of received
@@ -257,6 +294,9 @@ importScripts('/src/world/chunkCache.js');
         break;
       case 'queue':
           loadChunks(data.hash, data.pos);
+        break;
+      case 'debug':
+          debug(data.d);
         break;
       default:
         throw new Error('chunkLoader.js: Unrecognized message name');

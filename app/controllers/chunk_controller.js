@@ -4,9 +4,9 @@ var Compress = require('../lib/compress');
 module.exports = function() {
 
   var
-    radiusX = (4 / 2),
+    radiusX = (10 / 2),
 		radiusY = (4 / 2),
-		radiusZ = (4 / 2);
+		radiusZ = (10 / 2);
 
 
 	function loadChunks(req, res) {
@@ -46,12 +46,19 @@ module.exports = function() {
 					if ( to_update[ chunk.getHash() ] !== undefined ) {
 						chunk.generate();
 						map_data += chunk.getData();
-					} else {
-						//map_data += chunk.getHashData();
+						to_update[ chunk.getHash() ] = 0;
 					}
 
 				}
 			}
+		}
+		
+		for ( var key in to_update ) {
+		  if (to_update[key] !== 0) {
+		    console.log('error: did not update chunks');
+		    console.log(JSON.stringify(to_update));
+		    break;
+		  }
 		}
 		
 		// Compress and send data
@@ -61,11 +68,13 @@ module.exports = function() {
 		res.header('Content-Type', 'text/plain');
 		res.header('Content-Encoding', 'gzip');
 		res.header('Content-Length', gzData.length );
-		console.log("emitting compressed... " + map_data.length);
+		//console.log(((new Date()).getTime()) + ": update_hash - " + JSON.stringify(to_update) + ": pos - " + JSON.stringify(pos));
+		console.log("emitting compressed... " + map_data.length + ": - pos - " + JSON.stringify(pos));
 		
 		res.write(gzData, "binary");
+		console.log('sending…');
 		res.end();
-		
+		console.log('ending…');
 	}
 	
 

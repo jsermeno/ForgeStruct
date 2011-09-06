@@ -15,7 +15,9 @@ Forge.OrderedMap = (function(){
 			this.order_map[key] = value;
 		} 
 		else {
-			this.order_array.push(key);
+		  // for consistency we convert the array values to strings
+		  // since technically objects can only hold string values
+			this.order_array.push(key + '');
 			this.order_map[key] = value;
 		}
 	};
@@ -61,10 +63,24 @@ Forge.OrderedMap = (function(){
 	
 	
 	OrderedMap.prototype.removeFirst = function() {
-		var hash = this.order_array[0];
-		
-		this.order_array.splice(0, 1);
+		var hash = this.order_array.shift();
+
 		delete this.order_map[hash];
+	};
+	
+	
+	OrderedMap.prototype.shift = function() {
+	 var hash = this.order_array.shift();
+	 
+	 return this.order_map[hash];
+	};
+	
+	
+	OrderedMap.prototype.shiftKey = function() {
+	 var hash = this.order_array.shift();
+	 delete this.order_map[hash];
+	 
+	 return hash;
 	};
 	
 	
@@ -88,7 +104,7 @@ Forge.OrderedMap = (function(){
 	}
 	
 	OrderedMap.prototype.remove = function(key) {
-		var index = this.order_array.indexOf(key);
+		var index = this.order_array.indexOf(key + '');
 		if ( index === -1) {
 			throw new Error('key does not exist');
 		}

@@ -25,7 +25,9 @@ Forge.ChunkManager = (function(exports){
   exports.spawnWorker = function() {
     worker = new Worker('/src/worker/chunkLoader.js');
   
-    worker.onmessage = exports.loadNewChunk;
+    //worker.onmessage = exports.loadNewChunk;
+    worker.addEventListener('message', exports.loadNewChunk, false);
+    _WebDebug.attach(worker);
     
     return worker;
   };
@@ -33,8 +35,9 @@ Forge.ChunkManager = (function(exports){
   
   exports.loadNewChunk = function(event) {
     
-    if ( event.data.p === undefined )
+    if ( event.data.p === undefined ) {
       return;
+    }
     
     var geometry = Forge.Math.unserializeGeometry( event.data.d );
     var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
@@ -45,7 +48,27 @@ Forge.ChunkManager = (function(exports){
     });
     
     Forge.Shared.chunkCache.set( chunk.hash, chunk );
-    console.log('adding…');
+    Forge.World.refreshVisible();
+    //console.log('adding…');
+  }
+  
+  
+  /*
+    debug methods
+  */
+  
+  exports.getVisibleCount = function() {
+    worker.postMessage({n: 'debug', d: 'visibleCount'});
+  }
+  
+  
+  exports.getNotReceivedCount = function() {
+    worker.postMessage({n: 'debug', d: 'notReceived'});
+  }
+  
+  
+  exports.getQueueCount = function() {
+    worker.postMessage({n: 'debug', d: 'queueCount' });
   }
 
   return exports;
