@@ -56,10 +56,14 @@ Forge.Loader = (function(exports){
 			movementSpeed: 1000, lookSpeed: 0.125, noFly: false, lookVertical: true, constrainVertical: true
 
 		} );
+		Forge.Shared.camera = camera;
 				
+		// scene
 		scene = new THREE.Scene();
+		Forge.Shared.scene = scene;
 		
-		//scene.fog = new THREE.Fog( 0xffffff, 0.05, 15000 );
+		// Init Sky / Environment
+		Forge.Sky.initSky();
 		
 		// Create renderer
 		renderer = new THREE.WebGLRenderer({ antialias: false });
@@ -78,8 +82,6 @@ Forge.Loader = (function(exports){
     Forge.Shared.blockManager = new Forge.BlockManager({ source: 'clientWindow' });
 
 		// Share
-		Forge.Shared.scene = scene;
-		Forge.Shared.camera = camera;
 		Forge.Shared.stats = stats;
 		Forge.Shared.renderer = renderer;
     Forge.Shared.worker = worker;

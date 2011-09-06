@@ -17,8 +17,6 @@ Forge.World = (function(exports){
 
   var lastRegion; // last known of region of the player
   
-  // debug
-  var totalChunksSent = 0;
   
 	/*
 		Updates world on tick
@@ -71,7 +69,6 @@ Forge.World = (function(exports){
             // back into view. Need to
             // retrieve it
             chunks_to_queue[ hash ] = 1;
-            totalChunksSent++;
             update = true;
           } else if( chunk === undefined ) {
             // do nothing
@@ -108,7 +105,6 @@ Forge.World = (function(exports){
     // update chunks
     if ( update ) {
       console.log("queue for update: " + JSON.stringify(pos));
-      //console.log("total sent: " + totalChunksSent);
       Forge.ChunkManager.queueForUpdate( chunks_to_queue, pos );
     }
     

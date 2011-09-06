@@ -1,5 +1,5 @@
 //importScripts('/js/lib/ThreeWorker.js');
-importScripts('/js/lib/ThreeWebWorker.js');
+importScripts('/src/vendor/ThreeWorker.js');
 importScripts('/src/utils/consoleWorker.js');
 
 importScripts('/src/forge.js');
