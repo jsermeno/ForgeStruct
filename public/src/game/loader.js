@@ -4,7 +4,7 @@
 */
 Forge.Loader = (function(exports){
 	
-	var stats, scene, camera, renderer, worker;
+	var stats, scene, camera, renderer, worker, projector;
 	
 	/*
 		First non-closure function called in execution
@@ -21,25 +21,6 @@ Forge.Loader = (function(exports){
 	*/
 	function bootWorld() {
     Forge.World.loadWorld();
-    /*var blockManager = new Forge.BlockManager({source: 'clientWindow'});
-    var finalGeometry = new THREE.Geometry();
-   
-    var geometry = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1, blockManager.getGrass(), false);
-    var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
-    
-    GeometryUtils.merge(finalGeometry, mesh);
-    
-    geometry = new THREE.CubeGeometry(100, 100, 100, 1, 1, 1, blockManager.getGrass(), false);
-    mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
-    mesh.position.set(100, 0, 0);
-    
-    GeometryUtils.merge(finalGeometry, mesh)
-    console.log(finalGeometry);
-    
-    window.finalGeometry = finalGeometry;
-    
-    mesh = new THREE.Mesh(finalGeometry, new THREE.MeshFaceMaterial());
-    scene.addObject(mesh);*/
    
 		window.onload = function(){ Forge.Game.start() };
 	}
@@ -61,6 +42,10 @@ Forge.Loader = (function(exports){
 		// scene
 		scene = new THREE.Scene();
 		Forge.Shared.scene = scene;
+		
+		// projector
+		projector = new THREE.Projector();
+		Forge.Shared.projector = projector;
 		
 		// Init Sky / Environment
 		Forge.Sky.initSky();

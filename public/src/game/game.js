@@ -65,8 +65,11 @@ Forge.Game = (function(exports){
 		update game state
 	*/
 	function updateGame(time) {
+
+    Forge.Sky.update();
     Forge.Player.update();
     Forge.World.update();
+    
 	}
 	
 	

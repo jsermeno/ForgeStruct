@@ -91,7 +91,7 @@ var PerlinNoise = function () {
 
 
 		function ridge(a) {
-			a = (~a + 1) & 0x7FFFFFFF; // abs
+			a = Math.abs(a);
 			a = rmf_offset - a;
 			a = a * a;
 			return a;

@@ -93,7 +93,8 @@ Forge.World = (function(exports){
     
       if (new_visible_hash[ chunk.hash ] === undefined ) {
         visible.removeChild( chunk );
-        scene.removeChild( chunk );
+        console.log('removing…');
+        //scene.removeChild( chunk );
       } else {
         w++;
       }
