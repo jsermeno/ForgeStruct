@@ -57,8 +57,7 @@ Forge.Sky = (function(exports){
 		scene.fog = new THREE.FogExp2( 0xffffff, 0.00015 );
 		
 		// Lights
-		ambientLight = new THREE.AmbientLight( 0xf8f8ff );
-		ambientLight.color.setRGB( 255 / 255,	178 / 255, 114 / 255 );
+		ambientLight = new THREE.AmbientLight( 0xf1f1b4 );
 		
 		directionalLight = new THREE.DirectionalLight( 0xffffff );
 		directionalLight.position.set(1, 1, 2);
@@ -140,9 +139,9 @@ Forge.Sky = (function(exports){
   
   	// Color values at each point in the day
     var start = {
-      dark: new THREE.Color(0xD58C7D),
-      light: new THREE.Color(0xFFA069),
-      ambient: new THREE.Color(0xD58C7D)
+      dark: new THREE.Color(0x7393F2),
+      light: new THREE.Color(0x8CBAFF),
+      ambient: new THREE.Color(0xf1f1b4)
     },
     day = {
       dark: new THREE.Color(0x7393F2),
