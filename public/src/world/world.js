@@ -93,7 +93,7 @@ Forge.World = (function(exports){
     
       if (new_visible_hash[ chunk.hash ] === undefined ) {
         visible.removeChild( chunk );
-        console.log('removing…');
+        //console.log('removing…');
         //scene.removeChild( chunk );
       } else {
         w++;
@@ -105,7 +105,7 @@ Forge.World = (function(exports){
         
     // update chunks
     if ( update ) {
-      console.log("queue for update: " + JSON.stringify(pos));
+      //console.log("queue for update: " + JSON.stringify(pos));
       Forge.ChunkManager.queueForUpdate( chunks_to_queue, pos );
     }
     

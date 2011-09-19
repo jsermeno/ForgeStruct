@@ -26,6 +26,7 @@ importScripts('/src/world/chunkCache.js');
   
   // debug
   var notYetReceived = 0;
+  var couldNotRetrieve = 0;
   var everything = new Forge.OrderedMap();
   
   
@@ -37,6 +38,22 @@ importScripts('/src/world/chunkCache.js');
   function loadChunks(hash, pos) {
     var params;    
 
+    // send hashes that need updating to the server		
+    Forge._2.ajaxBinaryQueue({
+      url: "/load",
+      preload: function(){ 
+        loadVisible(hash)     
+        this.data = encodeURIComponent( JSON.stringify({h:hash,p:pos}) );
+      }, 
+      success: processChunks, 
+      data: null,
+      pos: pos
+    });
+  }
+
+  
+  function loadVisible(hash) {
+    
     // add request for neighbors of
     // each hash. I'm iterating over the hash
     // object, so might as well use the same
@@ -48,15 +65,6 @@ importScripts('/src/world/chunkCache.js');
       Forge._2.buildNeighbors( key, hash );
     }
 
-    // send hashes that need updating to the server
-    params = encodeURIComponent( JSON.stringify({h:hash,p:pos}) );
-		
-    Forge._2.ajaxBinaryQueue({
-      url: "/load", 
-      success: processChunks, 
-      data: params,
-      pos: pos 
-    });
   }
 
 
@@ -70,7 +78,7 @@ importScripts('/src/world/chunkCache.js');
 		var coordinates, hash, chunk_data;
 		
 		notYetReceived = response.byteLength / 32780;
-		console.log("chunks received: " + notYetReceived);
+		//console.log("chunks received: " + notYetReceived);
 		
 		// Iterate ArrayBuffer for chunks
 		while ( bufPos < response.byteLength - 1) {
@@ -118,7 +126,8 @@ importScripts('/src/world/chunkCache.js');
     function iterateGeometries() {
       
       if ( update_list.size() === 0 ) {
-        console.log('worker: size === 0');
+        //console.log('worker: size === 0');
+        Forge._2.ajaxFinish(); 
         building = false;
         return;
       }
@@ -134,7 +143,6 @@ importScripts('/src/world/chunkCache.js');
       if ( chunk !== undefined ) {
         buildGeometry( chunk );
       } else {
-        notYetReceived++;
         update_list.set(hash, 1);
       }
     
@@ -231,8 +239,10 @@ importScripts('/src/world/chunkCache.js');
 
     // if the chunk region is undefined
     // then we assume that it is solid
-		if (chunk_data === undefined) 
-		  return 1;
+		if (chunk_data === undefined) { 
+		  couldNotRetrieve++;
+      return 1;
+    }
 	
 		return chunk_data.getBlock( posX, posY, posZ );
   }
@@ -277,6 +287,9 @@ importScripts('/src/world/chunkCache.js');
         break;
       case 'queueCount':
         console.log(Forge.Queue.size('ajax'));
+        break;
+      case 'notRetrieved':
+        console.log(couldNotRetrieve);
         break;
     }
   }

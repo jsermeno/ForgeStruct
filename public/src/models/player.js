@@ -7,12 +7,12 @@ Forge.Player = (function(exports){
 	var position = new THREE.Vector3(0, 0, 0);
 	
 	
-  exports.getRegion = function() {
-    var region =  Forge.Math.wtorCoordinates( position );
-    region.y = 0;
+    exports.getRegion = function() {
+        var region =  Forge.Math.wtorCoordinates( position );
+        region.y = 0;
     
-    return region;
-  };
+        return region;
+    };
 
 
 	exports.getPosition = function() {

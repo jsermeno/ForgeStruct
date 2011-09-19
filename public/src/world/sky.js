@@ -99,8 +99,9 @@ Forge.Sky = (function(exports){
     // calculate day offset
     dayOffset = (new Date()).getTime() & dayInterval;
     theta = (Math.PI * 2) * (dayOffset / dayInterval);
-    theta = Math.PI;
-    
+
+    sunPos3D.z = camera.position.z;
+
     // create rotation matrix
     rotateMatrix = new THREE.Matrix4(Math.cos(theta), -Math.sin(theta), 0, 0,
                                          Math.sin(theta), Math.cos(theta), 0, 0,
@@ -110,22 +111,21 @@ Forge.Sky = (function(exports){
     // calculate rotation            
     sunPos2D = rotateMatrix.multiplyVector3( sunPos3D.clone() );
     
-    //sunPos2D.x *= -1;
-    
     // project to 2D
     sunPos2D = projector.projectVector(sunPos2D, camera);
     
     // translate from NDC to screen coordinates
-    sunPos2D.x = window.innerWidth * ((sunPos2D.x + 1) / 2);
-    sunPos2D.y = window.innerHeight * ((sunPos2D.y - 1) / -2);
-    
-    // calculate percentages
-    sunPos2D.x /= window.innerWidth;
-    sunPos2D.y /= window.innerHeight;
-    
+    sunPos2D.x = ((sunPos2D.x + 1) / 2);
+    sunPos2D.y = ((sunPos2D.y - 1) / -2);
+   
+    // off of the screen
+    sunPos2D.x = sunPos2D.z > 1 ? -2 : sunPos2D.x;
+    sunPos2D.y = sunPos2D.z > 1 ? -2 : sunPos2D.y;
+
+    // calculate percentages 
     sunPos2D.x *= 100;
     sunPos2D.y *= 100;
-		//console.log(-theta);
+    
     return sunPos2D;
   }
   
@@ -187,21 +187,21 @@ Forge.Sky = (function(exports){
   
   	for ( type in sky_update) {
 	  	tweens['dayBreak_' + type] = 	new TWEEN.Tween(start[type])		// from sunset to day color
-	    																.to(day[type], dayInterval * (1/24))
+	    																.to(day[type], dayInterval * (2/24))
 	    																.onUpdate(sky_update[type]);
 	    
 	    tweens['sunset_' + type] = 		new TWEEN.Tween(start[type])			// from day color to sunset color
-	    																.to(sunset[type], dayInterval * (1/24))
-	    																.delay(dayInterval * (10/24))
+	    																.to(sunset[type], dayInterval * (2/24))
+	    																.delay(dayInterval * (8/24))
 	    																.onUpdate(sky_update[type]);
 	    												
 	    tweens['nightfall_' + type] = new TWEEN.Tween(start[type])	// from sunset color to night fall
-	    																.to(night[type], dayInterval * (1/24))
+	    																.to(night[type], dayInterval * (2/24))
 	    																.onUpdate(sky_update[type]);
 	    													
 	    tweens['dawn_' + type] = 			new TWEEN.Tween(start[type])				// from night color to sunset color
-	    																.to(sunset[type], dayInterval * (1/24))
-	    																.delay(dayInterval * (10/24))
+	    																.to(sunset[type], dayInterval * (2/24))
+	    																.delay(dayInterval * (8/24))
 	    																.onUpdate(sky_update[type]);
 	    													
 	    tweens['dayBreak_' + type].chain(tweens['sunset_' + type]);

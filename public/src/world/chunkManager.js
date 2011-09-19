@@ -71,6 +71,11 @@ Forge.ChunkManager = (function(exports){
     worker.postMessage({n: 'debug', d: 'queueCount' });
   }
 
+  
+  exports.notRetrieved = function() {
+    worker.postMessage({n: 'debug', d: 'notRetrieved' });
+  };
+
   return exports;
 
 })({});

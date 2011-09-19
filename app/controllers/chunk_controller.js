@@ -17,6 +17,10 @@ module.exports = function() {
 			
 		var data, pos, to_update;
 	
+    // debug
+    var numChunks = 0;
+    var numChecked = 0;
+
 		try {
 			
 			// Attempt to parse json parameters
@@ -47,8 +51,10 @@ module.exports = function() {
 						chunk.generate();
 						map_data += chunk.getData();
 						to_update[ chunk.getHash() ] = 0;
+            numChunks++;
 					}
 
+          numChecked++;
 				}
 			}
 		}
@@ -69,12 +75,13 @@ module.exports = function() {
 		res.header('Content-Encoding', 'gzip');
 		res.header('Content-Length', gzData.length );
 		//console.log(((new Date()).getTime()) + ": update_hash - " + JSON.stringify(to_update) + ": pos - " + JSON.stringify(pos));
-		console.log("emitting compressed... " + map_data.length + ": - pos - " + JSON.stringify(pos));
-		
+		//console.log("emitting compressed... " + map_data.length + ": - pos - " + JSON.stringify(pos));
+		//console.log('emitting ' + numChunks + ' chunks & processed ' + numChecked + ' chunks...');
+
 		res.write(gzData, "binary");
-		console.log('sending…');
+		//console.log('sending…');
 		res.end();
-		console.log('ending…');
+		//console.log('ending…');
 	}
 	
 

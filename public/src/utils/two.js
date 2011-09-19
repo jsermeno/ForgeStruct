@@ -20,18 +20,22 @@ Forge._2 = (function(exports){
     @o - ajax param object
 	*/
 	exports.ajaxBinaryQueue = function(o) {
-    o.count = queueCount;
-    queueCount++;
-	
-    Queue.queue('ajax', function(){
-      exports.ajaxBinary(o);
-    });
-    //console.log('adding to queue… ' + Queue.size('ajax'));
-    //console.log('queueStatus: ' + startQueue);
-    if (startQueue) {
-      //console.log('starting dequeue…' + ' : n - ' + o.count);
-      Queue.dequeue('ajax');
-    }
+        o.count = queueCount;
+        queueCount++;
+        
+        Queue.queue('ajax', function(){
+          if ( typeof o.preload === 'function' ) {
+            o.preload(o);
+          }
+
+          exports.ajaxBinary(o);
+        });
+        //console.log('adding to queue… ' + Queue.size('ajax'));
+        //console.log('queueStatus: ' + startQueue);
+        if (startQueue) {
+          //console.log('starting dequeue…' + ' : n - ' + o.count);
+          Queue.dequeue('ajax');
+        }
 	};
 	
 	
@@ -43,32 +47,44 @@ Forge._2 = (function(exports){
 	*/
 	exports.ajaxBinary = function(o) {
     
-    //console.log('starting ajax request…' + Queue.size('ajax') + ': pos - ' + JSON.stringify(o.pos) + ': n - ' + o.count);
-    startQueue = false;
-    
-		var xhr = new XMLHttpRequest();
-		
-		xhr.open('GET', o.url + "/" + o.data, true);
-		xhr.responseType = 'arraybuffer';
-	
-		xhr.onreadystatechange = function() {
-		  if ( xhr.readyState === 4 ) {
-		    //console.log('finishing response... : n - ' + o.count);
-		    if ( xhr.status === 200 ) {
-		      o.success(xhr.response);
-		    } else {
-		      throw new Error('_2.ajaxBinary: xhr response failed');
-		    }
-		    
-		    startQueue = true;
-		    //console.log('continuing dequeue… ' + Queue.size('ajax') + ': n - ' + o.count);
-		    Queue.dequeue('ajax');
-		  }
-		};
-		
-    //console.log('sending… : n - ' + o.count);
+        //console.log('starting ajax request…' + Queue.size('ajax') + ': pos - ' + JSON.stringify(o.pos) + ': n - ' + o.count);
+        startQueue = false;
+        
+            var xhr = new XMLHttpRequest();
+            
+            xhr.open('GET', o.url + "/" + o.data, true);
+            xhr.responseType = 'arraybuffer';
+        
+            xhr.onreadystatechange = function() {
+              if ( xhr.readyState === 4 ) {
+                //console.log('finishing response... : n - ' + o.count);
+                if ( xhr.status === 200 ) {
+                  o.success(xhr.response);
+                } else {
+                  throw new Error('_2.ajaxBinary: xhr response failed');
+                }
+                
+                //console.log('continuing dequeue… ' + Queue.size('ajax') + ': n - ' + o.count);
+              }
+            };
+            
+        //console.log('sending… : n - ' + o.count);
 		xhr.send(null);
 	};
+
+    /**
+     * This will 'finish' an ajax call and allow
+     * the next in line to be completed. There is
+     * a problem with some browser implementations
+     * where long running calls seem to 'block' the
+     * receipt of an ajax response. We don't want to
+     * execute an ajax request until chunk loading is
+     * done.
+     */
+    exports.ajaxFinish = function(o) {
+        startQueue = true;
+        Queue.dequeue('ajax');
+    };
 	
 	
 	/*
