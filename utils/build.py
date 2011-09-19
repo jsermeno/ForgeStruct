@@ -12,13 +12,28 @@ import tempfile
 import sys
 
 WORKER_FILES = [
-'worker/Three.js',
-'worker/Vertex.js',
-'worker/Vector3.js',
-'worker/Face3.js',
-'worker/Face4.js',
-'worker/Geometry.js',
-'worker/worker.js'
+'vendor/DAT.GUI.min.js',
+'vendor/Stats.js',
+'vendor/Tween.js',
+'vendor/RequestAnimationFrame.js',
+'vendor/signals.min.js',
+'vendor/ThreeWebGL.js',
+'vendor/ThreeExtras.js',
+'vendor/underscore-min.js',
+'utils/consoleWorker.js',
+'forge.js',
+'utils/math.js',
+'utils/two.js',
+'utils/orderedMap.js',
+'models/chunk.js',
+'models/player.js',
+'world/sky.js',
+'world/blockManager.js',
+'world/chunkCache.js',
+'world/chunkManager.js',
+'world/world.js',
+'game/game.js',
+'game/loader.js'
 ]
 
 def merge(files):
@@ -26,7 +41,7 @@ def merge(files):
 	buffer = []
 
 	for filename in files:
-		with open(os.path.join('..', 'public/js', filename), 'r') as f:
+		with open(os.path.join('..', 'public/src', filename), 'r') as f:
 			buffer.append(f.read())
 
 	return "".join(buffer)
@@ -34,7 +49,7 @@ def merge(files):
 
 def output(text, filename):
 
-	with open(os.path.join('..', 'public/js', filename), 'w') as f:
+	with open(os.path.join('..', 'public/', filename), 'w') as f:
 		f.write(text)
 
 
@@ -143,7 +158,7 @@ def main(argv=None):
 	minified = args.minified
 
 	config = [
-	['ForgeWorker', 'includes_worker', WORKER_FILES, args.worker]
+	['Forge', 'includes_worker', WORKER_FILES, args.worker]
 	]
 
 	for fname_lib, fname_inc, files, enabled in config:

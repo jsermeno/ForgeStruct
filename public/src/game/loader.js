@@ -12,7 +12,8 @@ Forge.Loader = (function(exports){
 	function init() {
 		bootRenderer();
 		bootWorld();
-		drawAxes();
+		//drawAxes();
+    bootGUI();
 	}
 	
 	
@@ -24,6 +25,15 @@ Forge.Loader = (function(exports){
    
 		window.onload = function(){ Forge.Game.start() };
 	}
+
+
+  function bootGUI() {
+    var gui = new DAT.GUI({
+      height: 1 * 32 - 1  
+    });
+
+    gui.add(Forge.Shared.GUI, 'sky');
+  }
 	
 	
 	/*

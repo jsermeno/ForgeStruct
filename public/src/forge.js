@@ -3,7 +3,9 @@
 	@author Justin Sermeno
 */
 var Forge = Forge || {
-	Shared: {},
+	Shared: {
+    GUI: {}  
+  },
 	Config: {
 		chunk_size: 32,
 		block_size: 50,

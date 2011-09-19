@@ -1,8 +1,12 @@
 
-module.exports = function() {
+module.exports = function(app) {
 
   function launch(req, res) {
-    res.render('index');
+    console.log(app.set('environmentName'));
+
+    res.render('index', {
+      env: app.set('environmentName')
+    });
   }
 
   // Routes

@@ -33,13 +33,14 @@ Forge.Sky = (function(exports){
     gradObj = calculateSkyGradient();
     sunObj = calculateSunPosition();
     
-    TWEEN.update();
-    
     // update sky gradient
-    document.body.style.background = "\
-      -webkit-gradient(radial, "+ sunObj.x + "% " + sunObj.y + "%, 50, " + sunObj.x + "% " + sunObj.y + "%, 150, from(#ffffff), to(rgba(251, 230, 180, 0.0))),\
-      -webkit-linear-gradient(top, #" + skyObj.dark + " 0%,#" + skyObj.dark + " " + gradObj.g1 + "%,#" + skyObj.light + " " + gradObj.g2 + "%,#" + skyObj.light + " 100%)";
-       
+    if ( Forge.Shared.GUI.sky ) {
+      TWEEN.update();
+      document.body.style.background = "\
+        -webkit-gradient(radial, "+ sunObj.x + "% " + sunObj.y + "%, 50, " + sunObj.x + "% " + sunObj.y + "%, 150, from(#ffffff), to(rgba(251, 230, 180, 0.0))),\
+        -webkit-linear-gradient(top, #" + skyObj.dark + " 0%,#" + skyObj.dark + " " + gradObj.g1 + "%,#" + skyObj.light + " " + gradObj.g2 + "%,#" + skyObj.light + " 100%)";
+    }
+
   };
   
 
@@ -51,6 +52,8 @@ Forge.Sky = (function(exports){
     camera = Forge.Shared.camera;
     projector = Forge.Shared.projector;
     
+    Forge.Shared.GUI.sky = false;
+
 		scene.fog = new THREE.FogExp2( 0xffffff, 0.00015 );
 		
 		// Lights

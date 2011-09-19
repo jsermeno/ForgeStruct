@@ -25,10 +25,12 @@ exports.boot = function( params ) {
   });
   
   app.configure('development', function(){
+    app.set('environmentName', 'dev');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
   });
   
   app.configure('production', function(){
+    app.set('environmentName', 'prod');
     app.use(express.errorHandler()); 
   });
 

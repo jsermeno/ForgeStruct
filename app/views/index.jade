@@ -1,34 +1,38 @@
-script(type='text/javascript', src='/src/vendor/Stats.js')
-script(type='text/javascript', src='/src/vendor/Tween.js')
-script(type='text/javascript', src='/src/vendor/RequestAnimationFrame.js')
-script(type='text/javascript', src='/src/vendor/signals.min.js')
-script(type='text/javascript', src='/src/vendor/ThreeWebGL.js')
-script(type='text/javascript', src='/src/vendor/ThreeExtras.js')
-script(type='text/javascript', src='/src/vendor/underscore-min.js')
-script(type='text/javascript', src='/src/utils/consoleWorker.js')
+- if (env === 'dev')
+  script(type='text/javascript', src='/src/vendor/DAT.GUI.min.js')
+  script(type='text/javascript', src='/src/vendor/Stats.js')
+  script(type='text/javascript', src='/src/vendor/Tween.js')
+  script(type='text/javascript', src='/src/vendor/RequestAnimationFrame.js')
+  script(type='text/javascript', src='/src/vendor/signals.min.js')
+  script(type='text/javascript', src='/src/vendor/ThreeWebGL.js')
+  script(type='text/javascript', src='/src/vendor/ThreeExtras.js')
+  script(type='text/javascript', src='/src/vendor/underscore-min.js')
+  script(type='text/javascript', src='/src/utils/consoleWorker.js')
 
-// namespace
-script(type='text/javascript', src='/src/forge.js')
+  // namespace
+  script(type='text/javascript', src='/src/forge.js')
 
-// utils
-script(type='text/javascript', src='/src/utils/math.js')
-script(type='text/javascript', src='/src/utils/two.js')
-script(type='text/javascript', src='/src/utils/orderedMap.js')
+  // utils
+  script(type='text/javascript', src='/src/utils/math.js')
+  script(type='text/javascript', src='/src/utils/two.js')
+  script(type='text/javascript', src='/src/utils/orderedMap.js')
 
-// models
-script(type='text/javascript', src='/src/models/chunk.js')
-script(type='text/javascript', src='/src/models/player.js')
+  // models
+  script(type='text/javascript', src='/src/models/chunk.js')
+  script(type='text/javascript', src='/src/models/player.js')
 
-// world
-script(type='text/javascript', src='/src/world/sky.js')
-script(type='text/javascript', src='/src/world/blockManager.js')
-script(type='text/javascript', src='/src/world/chunkCache.js')
-script(type='text/javascript', src='/src/world/chunkManager.js')
-script(type='text/javascript', src='/src/world/world.js')
+  // world
+  script(type='text/javascript', src='/src/world/sky.js')
+  script(type='text/javascript', src='/src/world/blockManager.js')
+  script(type='text/javascript', src='/src/world/chunkCache.js')
+  script(type='text/javascript', src='/src/world/chunkManager.js')
+  script(type='text/javascript', src='/src/world/world.js')
 
-// game
-script(type='text/javascript', src='/src/game/game.js')
-script(type='text/javascript', src='/src/game/loader.js')
+  // game
+  script(type='text/javascript', src='/src/game/game.js')
+  script(type='text/javascript', src='/src/game/loader.js')
+- else
+  script(type='text/javascript', src='/build/Forge.js')
 
 #loading_screen
   h1 ForgeStruct
